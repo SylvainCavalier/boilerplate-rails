@@ -1,0 +1,27 @@
+# PostgreSQL configuration
+# Ensure PostgreSQL is installed and running
+# For development: createdb app_development (creates the database)
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: <%= ENV.fetch("DB_USERNAME", "postgres") %>
+  password: <%= ENV.fetch("DB_PASSWORD", nil) %>
+
+development:
+  <<: *default
+  database: boilerplate_development
+  sslmode: disable
+
+test:
+  <<: *default
+  database: boilerplate_test
+  sslmode: disable
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "boilerplate_production") %>
+  sslmode: require
