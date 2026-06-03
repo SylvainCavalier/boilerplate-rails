@@ -59,11 +59,13 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :solid_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter = :resque
-  # config.active_job.queue_name_prefix = "boilerplate_rails_typescript_production"
+  # Single-database setup: Solid Queue runs on the primary database, so no
+  # connects_to override here (see db/migrate/*_create_solid_queue_tables.rb).
+  config.active_job.queue_adapter = :solid_queue
+  # config.active_job.queue_name_prefix = "boilerplate_rails_production"
 
   config.action_mailer.perform_caching = false
 

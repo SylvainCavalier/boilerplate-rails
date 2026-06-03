@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # Solid Queue dashboard (HTTP basic auth — see config/initializers/mission_control_jobs.rb).
+  mount MissionControl::Jobs::Engine, at: "/jobs"
+
   # Defines the root path route ("/")
   # root "posts#index"
 end

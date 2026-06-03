@@ -76,8 +76,14 @@ gem "meta-tags"
 # Model versioning and audit trail
 gem "paper_trail"
 
-# Background job processing - simpler than Sidekiq
-gem "good_job"
+# Rails 8 Solid stack: background jobs, cache and Action Cable backed by the
+# database - no Redis required, runs on a single Postgres (Heroku/Scalingo).
+gem "solid_queue"
+gem "solid_cache"
+gem "solid_cable"
+
+# Web dashboard for Solid Queue jobs
+gem "mission_control-jobs"
 
 # Health check endpoint for monitoring and orchestration
 gem "okcomputer"
