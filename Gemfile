@@ -11,8 +11,9 @@ gem "pg", ">= 1.5"
 # Web server
 gem "puma", ">= 5.0"
 
-# Asset pipeline
-gem "sprockets-rails"
+# Asset pipeline - Propshaft serves fingerprinted assets (Rails 8 default).
+# Compilation/bundling is handled upstream by esbuild + Tailwind (see below).
+gem "propshaft"
 
 # JavaScript bundling - esbuild for fast builds
 gem "jsbundling-rails"
