@@ -1,9 +1,9 @@
 source "https://rubygems.org"
 
-ruby "3.3.5"
+ruby "3.4.8"
 
 # Core Rails framework
-gem "rails", "~> 7.1.5", ">= 7.1.5.2"
+gem "rails", "~> 8.1.3"
 
 # Database - PostgreSQL adapter
 gem "pg", ">= 1.5"
@@ -29,8 +29,9 @@ gem "stimulus-rails"
 # JSON rendering for API responses
 gem "jbuilder"
 
-# Standard library gems needed for Ruby 3.5+ compatibility
+# Standard library gems no longer bundled by default in recent Rubies
 gem "ostruct"
+gem "benchmark"
 
 # Boot time optimization through caching
 gem "bootsnap", require: false
