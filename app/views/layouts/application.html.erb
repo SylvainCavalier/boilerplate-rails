@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <title><%= content_for(:title) || "Rails App" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,7 +10,32 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="flex h-full flex-col bg-gray-50 text-gray-900 antialiased">
+    <header class="border-b border-gray-200 bg-white">
+      <nav class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <%= link_to "BoilerplateRails", root_path, class: "text-lg font-semibold tracking-tight" %>
+
+        <div class="flex items-center gap-4 text-sm">
+          <% if user_signed_in? %>
+            <span class="text-gray-500"><%= current_user.email %></span>
+            <% if current_user.admin? %>
+              <%= link_to "Jobs", "/jobs", class: "font-medium text-indigo-600 hover:text-indigo-500" %>
+            <% end %>
+            <%= button_to "Sign out", destroy_user_session_path, method: :delete,
+                  class: "font-medium text-gray-600 hover:text-gray-900" %>
+          <% else %>
+            <%= link_to "Sign in", new_user_session_path, class: "font-medium text-gray-600 hover:text-gray-900" %>
+            <%= link_to "Sign up", new_user_registration_path,
+                  class: "rounded-md bg-indigo-600 px-3 py-1.5 font-medium text-white hover:bg-indigo-500" %>
+          <% end %>
+        </div>
+      </nav>
+    </header>
+
+    <%= render "shared/flash" %>
+
+    <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+      <%= yield %>
+    </main>
   </body>
 </html>

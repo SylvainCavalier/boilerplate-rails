@@ -1,233 +1,95 @@
-# Rails 7 + Hotwire + Tailwind CSS Boilerplate
+# Rails 8 + Hotwire + Tailwind CSS Boilerplate
 
-A production-ready Rails boilerplate with Hotwire (Turbo + Stimulus), Tailwind CSS, PostgreSQL, and modern development tools.
+A production-ready Rails 8.1 SSR boilerplate: Hotwire (Turbo + Stimulus), Tailwind CSS v4, PostgreSQL, Devise + Pundit, the Solid stack, and a ready-to-run CI pipeline.
 
 ## 📦 Stack
 
-- **Framework**: Rails 7.1
+- **Framework**: Rails 8.1 (Ruby 3.4)
 - **Database**: PostgreSQL
 - **Frontend**: Hotwire (Turbo + Stimulus)
-- **Styling**: Tailwind CSS
-- **JS Bundler**: esbuild
-- **CSS Bundler**: Tailwind CLI
-- **Authentication**: Devise
+- **Styling**: Tailwind CSS v4
+- **Assets**: esbuild (JS bundling) + Tailwind CLI (CSS), served by Propshaft
+- **Authentication**: Devise (`User` with an `admin` flag)
 - **Authorization**: Pundit
-- **Background Jobs**: GoodJob
-- **Testing**: RSpec, FactoryBot, Capybara, Cuprite
-- **Security**: Rack Attack, Secure Headers, Brakeman
+- **Jobs / Cache / Cable**: Solid Queue, Solid Cache, Solid Cable (single database, no Redis)
+- **Jobs dashboard**: Mission Control – Jobs (`/jobs`, admin-only)
+- **Testing**: RSpec, FactoryBot, Faker, Capybara, Cuprite
+- **Quality / Security**: RuboCop omakase, Brakeman, bundler-audit, Rack::Attack, native CSP
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Ruby 3.3.5
-- PostgreSQL 12+
-- Node.js 18+
-- npm or yarn
+- Ruby 3.4.8
+- PostgreSQL 14+
+- Node.js 22
 
 ### Installation
 
-1. **Clone the repository**
 ```bash
 git clone <repository-url>
-cd boilerplate
+cd boilerplate-rails
+
+cp .env.example .env   # adjust DB credentials if needed
+bin/setup              # installs gems + npm deps, prepares the DB, starts the dev server
 ```
 
-2. **Install Ruby dependencies**
-```bash
-bundle install
-```
+`bin/setup` ends by launching `bin/dev`. Pass `--skip-server` to stop before booting. The app runs at http://localhost:3000.
 
-3. **Install JavaScript dependencies**
-```bash
-npm install
-```
-
-4. **Setup environment variables**
-Copy `.env.example` to `.env` and configure your database and other settings:
-```bash
-cp .env.example .env
-```
-
-5. **Create and initialize the database**
-```bash
-rails db:create
-rails db:migrate
-rails db:seed
-```
-
-6. **Start the development server**
-```bash
-bin/dev
-```
-
-The application will be available at `http://localhost:3000`
+A development admin (`admin@example.com` / `password123`) is created by `bin/rails db:seed`, giving access to the `/jobs` dashboard.
 
 ## 📝 Development
 
-### Running the full stack
 ```bash
-bin/dev  # Runs Rails, JS watcher, and CSS watcher in parallel
+bin/dev            # Rails + JS watcher + CSS watcher (Procfile.dev)
+bin/rails server   # Rails only
+npm run dev:js     # esbuild watch
+npm run dev:css    # Tailwind watch
 ```
 
-### Individual components
+JavaScript dependencies are managed with **npm**. Stimulus controllers live in `app/javascript/controllers/`.
+
+## 🧪 Testing & CI
+
 ```bash
-# Rails server only
-bin/rails server
+bundle exec rspec                       # all specs
+bundle exec rspec spec/foo_spec.rb:42   # one example
 
-# JavaScript watcher (esbuild)
-npm run dev:js
-
-# CSS watcher (Tailwind)
-npm run dev:css
+bin/ci             # full pipeline locally: RuboCop, bundler-audit, Brakeman, RSpec, seeds
+bin/rubocop -A     # lint + autocorrect
 ```
 
-### Production builds
-```bash
-# Bundle JavaScript
-npm run build
+CI runs on GitHub Actions (`.github/workflows/ci.yml`) by invoking `bin/ci` — the pipeline is defined once in `config/ci.rb`.
 
-# Build Tailwind CSS
-npm run build:css
-```
-
-## 🧪 Testing
-
-### Run all tests
-```bash
-bundle exec rspec
-```
-
-### Run tests with coverage
-```bash
-bundle exec rspec --format coverage
-```
-
-### Run system tests (Capybara + Cuprite)
-```bash
-bundle exec rspec spec/system
-```
-
-## 🔒 Security
-
-- **Rack Attack**: Rate limiting and DDoS protection
-- **Secure Headers**: Content Security Policy, X-Frame-Options, etc.
-- **Brakeman**: Static security analysis for Rails
-- **Bundler Audit**: Checks for known vulnerabilities in dependencies
-
-Run security checks:
-```bash
-bundle exec brakeman
-bundle exec bundler-audit
-```
+System specs use headless Chrome via Cuprite; tag an example `js: true` to drive a real browser (plain system specs use the faster rack_test driver).
 
 ## 🎨 Styling
 
-Tailwind CSS is pre-configured and watched in development. Add custom styles in:
-```
-app/assets/stylesheets/application.tailwind.css
-```
+Tailwind v4 source lives in `app/assets/stylesheets/application.tailwind.css`; it compiles to `app/assets/builds/application.css`. Propshaft fingerprints and serves the built files.
 
-## 🔗 Frontend Structure
+## ⚙️ Background jobs (Solid Queue)
 
-### Controllers (Stimulus)
-Add Stimulus controllers in `app/javascript/controllers/`
+Active Job uses Solid Queue in production (development stays on the async adapter). Everything runs on the **primary** Postgres database — no Redis, no extra databases — so the app deploys to a single managed Postgres. The worker process is `bin/jobs`.
 
-```javascript
-// app/javascript/controllers/hello_controller.js
-import { Controller } from "@hotwired/stimulus"
+## 🔒 Security
 
-export default class extends Controller {
-  connect() {
-    console.log("Hello controller connected!")
-  }
-}
-```
-
-Use in views with `data-controller`:
-```erb
-<div data-controller="hello">
-  <input type="text" data-action="input->hello#greet">
-</div>
-```
-
-## 📚 Key Gems
-
-| Gem | Purpose |
-|-----|---------|
-| `devise` | User authentication |
-| `pundit` | Authorization & permissions |
-| `good_job` | Background job processing |
-| `lograge` | Structured logging |
-| `pg_search` | Full-text search on PostgreSQL |
-| `friendly_id` | SEO-friendly URLs |
-| `paper_trail` | Model versioning & audit trail |
-| `pagy` | Lightweight pagination |
-| `meta-tags` | SEO meta tags |
-| `rspec-rails` | Testing framework |
-
-## 📊 Monitoring
-
-### Health checks
-```
-GET /health
-```
-
-Powered by `okcomputer` gem.
-
-### Query analysis
-Install `bullet` to detect N+1 queries in development:
-```bash
-# Runs in development by default
-# Check Rails logs for warnings
-```
-
-### Performance profiling
-```ruby
-# Add to controller/view
-Rack::MiniProfiler.allow_authorization = true
-```
-
-## 🛠 Development Tools
-
-- **Annotate**: Adds schema comments to models
-  ```bash
-  bundle exec annotate
-  ```
-
-- **Letter Opener**: Preview emails in development
-  Automatically opens in browser when email is sent
-
-- **Cuprite**: Headless Chrome for faster system tests
+- **Native CSP** in `config/initializers/content_security_policy.rb` (nonce-based)
+- **Brakeman** static analysis and **bundler-audit** dependency CVE scan (both in `bin/ci`)
+- **Rack::Attack** bundled (add your throttles in an initializer)
 
 ## 📦 Deployment
 
-### Environment variables needed for production
+Buildpack deploy (Heroku / Scalingo) via `Procfile`:
 
-```bash
-DB_HOST=your-postgres-host
-DB_USERNAME=postgres-user
-DB_PASSWORD=secure-password
-DB_NAME=boilerplate_production
-RAILS_ENV=production
-RAILS_LOG_TO_STDOUT=true
-SECRET_KEY_BASE=<generate-with: rails secret>
+```
+release: bundle exec rails db:prepare
+web: bundle exec puma -C config/puma.rb
+worker: bundle exec ./bin/jobs
 ```
 
-### Build for production
-```bash
-npm run build
-npm run build:css
-bundle exec rails assets:precompile
-```
+Production environment variables (see `.env.example`): `DB_*`, `SECRET_KEY_BASE` (or `RAILS_MASTER_KEY`), `APP_HOST` (used to build mailer URLs). `/up` is the health-check endpoint.
 
-## 📝 Additional Resources
-
-- [Rails Guides](https://guides.rubyonrails.org)
-- [Hotwire Documentation](https://hotwired.dev)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Devise Wiki](https://github.com/heartcombo/devise/wiki)
-- [Pundit Authorization](https://github.com/varvet/pundit)
+A multi-stage `Dockerfile` is also maintained for container deploys.
 
 ## 📄 License
 

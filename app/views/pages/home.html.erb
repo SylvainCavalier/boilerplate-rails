@@ -1,0 +1,24 @@
+<% content_for :title, "BoilerplateRails" %>
+
+<section class="mx-auto max-w-2xl text-center">
+  <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Rails 8 SSR boilerplate</h1>
+  <p class="mt-4 text-gray-600">
+    Hotwire · Tailwind · Propshaft · Devise · Pundit · Solid Queue/Cache/Cable.
+    Replace this page with your app.
+  </p>
+
+  <div class="mt-8">
+    <% if user_signed_in? %>
+      <p class="text-gray-700">
+        Signed in as <span class="font-medium"><%= current_user.email %></span><%= " (admin)" if current_user.admin? %>.
+      </p>
+    <% else %>
+      <div class="flex justify-center gap-3">
+        <%= link_to "Sign up", new_user_registration_path,
+              class: "rounded-md bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500" %>
+        <%= link_to "Sign in", new_user_session_path,
+              class: "rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 hover:bg-gray-50" %>
+      </div>
+    <% end %>
+  </div>
+</section>

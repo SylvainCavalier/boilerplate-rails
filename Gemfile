@@ -58,9 +58,6 @@ gem "pundit"
 # Rate limiting and DDoS protection
 gem "rack-attack"
 
-# Security headers (CSP, X-Frame-Options, etc.)
-gem "secure_headers"
-
 # Lightweight pagination without unnecessary joins
 gem "pagy"
 

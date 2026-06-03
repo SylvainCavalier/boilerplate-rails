@@ -1,10 +1,6 @@
-# Mission Control - Jobs dashboard (mounted at /jobs in config/routes.rb).
+# Mission Control - Jobs dashboard.
 #
-# Secure by default: the engine returns 401 unless HTTP basic auth credentials
-# are configured. Set them in production via env vars.
-MissionControl::Jobs.http_basic_auth_user = ENV["MISSION_CONTROL_JOBS_USER"]
-MissionControl::Jobs.http_basic_auth_password = ENV["MISSION_CONTROL_JOBS_PASSWORD"]
-
-# Browse the dashboard without credentials in development.
-# TODO (Phase 5): replace HTTP basic auth with a Devise admin constraint.
-MissionControl::Jobs.http_basic_auth_enabled = false if Rails.env.development?
+# Access is restricted in config/routes.rb to signed-in admins via a Devise
+# `authenticate :user, ->(u) { u.admin? }` constraint, so the engine's own
+# HTTP basic auth is disabled here to avoid a second prompt.
+MissionControl::Jobs.http_basic_auth_enabled = false

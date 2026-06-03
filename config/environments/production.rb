@@ -69,6 +69,10 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # Required by Devise (and any mailer) to build URLs in emails. Set APP_HOST
+  # to your domain (e.g. app.example.com).
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "example.com") }
+
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false

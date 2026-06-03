@@ -41,6 +41,12 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # Required by Devise (and any mailer) to build URLs in emails.
+  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+
+  # Preview sent emails in the browser instead of delivering them.
+  config.action_mailer.delivery_method = :letter_opener
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
