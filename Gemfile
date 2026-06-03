@@ -91,13 +91,13 @@ gem "okcomputer"
 group :development, :test do
   # Interactive debugger for development
   gem "debug", platforms: %i[ mri windows ]
-  
+
   # RSpec testing framework
   gem "rspec-rails"
-  
+
   # Factory fixtures for consistent test data
   gem "factory_bot_rails"
-  
+
   # Fake data generation for tests
   gem "faker"
 end
@@ -105,19 +105,19 @@ end
 group :development do
   # Interactive error page with console
   gem "web-console"
-  
+
   # Performance profiler for development
   gem "rack-mini-profiler"
-  
+
   # Detect N+1 query problems in development
   gem "bullet"
-  
+
   # Add comments in models with schema information
   gem "annotate"
-  
+
   # Security vulnerability scanner for gems
   gem "bundler-audit"
-  
+
   # Preview emails in development without sending
   gem "letter_opener"
 end
@@ -125,10 +125,10 @@ end
 group :test do
   # System testing framework
   gem "capybara"
-  
+
   # Headless Chrome driver for faster system tests (replaces Selenium)
   gem "cuprite"
-  
+
   # One-liners for testing validations and associations
   gem "shoulda-matchers"
 end
@@ -136,4 +136,7 @@ end
 group :development, :test do
   # Static code analyzer for Rails security issues
   gem "brakeman"
+
+  # Ruby/Rails style guide - Basecamp's omakase ruleset (Rails 8 default)
+  gem "rubocop-rails-omakase", require: false
 end

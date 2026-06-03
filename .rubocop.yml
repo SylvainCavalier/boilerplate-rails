@@ -1,0 +1,13 @@
+# Omakase Ruby styling for Rails — https://github.com/rails/rubocop-rails-omakase
+inherit_gem:
+  rubocop-rails-omakase: rubocop.yml
+
+AllCops:
+  Exclude:
+    - "db/schema.rb"
+    - "db/migrate/*_create_solid_*.rb" # generated Solid stack schemas
+    - "bin/**/*"
+    - "node_modules/**/*"
+    - "vendor/**/*"
+
+# Project-specific overrides go below.
